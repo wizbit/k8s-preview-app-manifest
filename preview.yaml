@@ -9,7 +9,7 @@ spec:
         generators:
           - pullRequest:
               github:
-                owner: marcusspeight
+                owner: wizbit
                 repo: k8s-preview-app-code
                 tokenRef:
                   key: token
