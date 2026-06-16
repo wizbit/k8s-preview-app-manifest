@@ -12,8 +12,8 @@ spec:
                 owner: marcusspeight
                 repo: k8s-preview-app-code
                 tokenRef:
-                  key: github-token
-                  secretName: token
+                  key: token
+                  secretName: github-token
           - git:
               repoURL: 'https://github.com/wizbit/k8s-preview-app-manifest.git'
               revision: HEAD
