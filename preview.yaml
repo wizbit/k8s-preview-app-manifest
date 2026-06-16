@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: test-app-preview
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - pullRequest:
+              github:
+                owner: marcusspeight
+                repo: k8s-preview-app-code
+                tokenRef:
+                  key: github-token
+                  secretName: token
+          - git:
+              repoURL: 'https://github.com/wizbit/k8s-preview-app-manifest.git'
+              revision: HEAD
+              directories:
+                - path: overlays/preview
+  template:
+    metadata:
+      name: 'test-app-preview-pr-{{number}}'
+    spec:
+      project: default
+      source:
+        repoURL: 'https://github.com/wizbit/k8s-preview-app-manifest.git'
+        targetRevision: HEAD
+        path: overlays/preview
+        kustomize:
+          images:
+            - app-image=marcusspeight/preview-app-{{head-sha1}}
+      destination:
+        name: cluster1
+        namespace: test-app-preview-pr-{{number}}
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        managedNamespaceMetadata:
+          annotations:
+            istio.io/dataplane-mode: ambient
