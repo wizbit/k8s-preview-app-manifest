@@ -14,6 +14,8 @@ spec:
                 tokenRef:
                   key: token
                   secretName: github-token
+                labels:
+                  - preview
           - git:
               repoURL: 'https://github.com/wizbit/k8s-preview-app-manifest.git'
               revision: HEAD
@@ -30,7 +32,7 @@ spec:
         path: overlays/preview
         kustomize:
           images:
-            - app-image=marcusspeight/preview-app-{{head-sha1}}
+            - app-image=marcusspeight/preview-app:sha-{{head_short_sha_7}}
       destination:
         name: cluster1
         namespace: test-app-preview-pr-{{number}}
